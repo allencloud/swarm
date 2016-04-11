@@ -1,6 +1,10 @@
 package cluster
 
-import "github.com/docker/engine-api/types"
+import (
+	"fmt"
+
+	"github.com/docker/engine-api/types"
+)
 
 // Volume is exported
 type Volume struct {
@@ -13,10 +17,10 @@ type Volume struct {
 type Volumes []*Volume
 
 // Get returns a volume using its ID or Name
-func (volumes Volumes) Get(name string) *Volume {
+func (volumes Volumes) Get(name string) (*Volume, error) {
 	// Abort immediately if the name is empty.
 	if len(name) == 0 {
-		return nil
+		return nil, fmt.Errorf("Length of volume name cannot be 0")
 	}
 
 	candidates := []*Volume{}
@@ -30,7 +34,7 @@ func (volumes Volumes) Get(name string) *Volume {
 
 	// Return if we found a unique match.
 	if size := len(candidates); size == 1 {
-		return candidates[0]
+		return candidates[0], nil
 	} else if size > 1 {
 		// Match first volume with non-local driver
 		for _, volume := range candidates {
@@ -38,9 +42,11 @@ func (volumes Volumes) Get(name string) *Volume {
 				return volume
 			}
 		}
-		return nil
+		return nil, fmt.Errorf("More than one volume named by (%s) in cluster." +
+			" Please use Engine_ID/Volume_Name to specify one.", name)
 	}
 
+	// There is no candidate.
 	// Match /name and return as soon as we find one.
 	for _, volume := range volumes {
 		if volume.Name == "/"+name {

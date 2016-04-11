@@ -300,17 +300,17 @@ func getNetwork(c *context, w http.ResponseWriter, r *http.Request) {
 // GET /volumes/{volumename:.*}
 func getVolume(c *context, w http.ResponseWriter, r *http.Request) {
 	var name = mux.Vars(r)["volumename"]
-	if volume := c.cluster.Volumes().Get(name); volume != nil {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(volume)
+	if volume, err := c.cluster.Volumes().Get(name); err != nil {
+		httpError(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	httpError(w, fmt.Sprintf("No such volume: %s", name), http.StatusNotFound)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(volume)
 }
 
 // GET /volumes
 func getVolumes(c *context, w http.ResponseWriter, r *http.Request) {
-	volumes := struct{ Volumes []*apitypes.Volume }{}
+	volumes := []*apitypes.Volume{}
 
 	for _, volume := range c.cluster.Volumes() {
 		tmp := (*volume).Volume
