@@ -406,6 +406,11 @@ func (c *Cluster) Volumes() cluster.Volumes {
 	return nil
 }
 
+// Plugins returns plugin info in the cluster.
+func (c *Cluster) Plugins() types.PluginsInfo {
+	return types.PluginsInfo{}
+}
+
 // listNodes returns all the nodes in the cluster.
 func (c *Cluster) listNodes() []*node.Node {
 	c.RLock()

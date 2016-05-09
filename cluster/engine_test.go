@@ -42,6 +42,11 @@ var (
 		KernelVersion:   "1.2.3",
 		OperatingSystem: "golang",
 		Labels:          []string{"foo=bar"},
+		Plugins: types.PluginsInfo{
+			Volume:        []string{"local"},
+			Network:       []string{"null", "host", "bridge"},
+			Authorization: nil,
+		},
 	}
 
 	mockVersion = types.Version{
@@ -229,6 +234,7 @@ func TestEngineSpecs(t *testing.T) {
 	assert.Equal(t, engine.Labels["kernelversion"], mockInfo.KernelVersion)
 	assert.Equal(t, engine.Labels["operatingsystem"], mockInfo.OperatingSystem)
 	assert.Equal(t, engine.Labels["foo"], "bar")
+	assert.Equal(t, engine.Plugins, mockInfo.Plugins)
 
 	client.Mock.AssertExpectations(t)
 	apiClient.Mock.AssertExpectations(t)

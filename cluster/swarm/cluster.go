@@ -833,6 +833,15 @@ func (c *Cluster) TotalMemory() int64 {
 	return totalMemory
 }
 
+// Plugins returns the PluginInfo of all nodes managed
+func (c *Cluster) Plugins() types.PluginsInfo {
+	var pi types.PluginsInfo
+	for _, engine := range c.engines {
+		pi = mergePlugins(pi, engine.Plugins)
+	}
+	return pi
+}
+
 // TotalCpus returns the total memory of the cluster
 func (c *Cluster) TotalCpus() int64 {
 	var totalCpus int64

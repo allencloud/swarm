@@ -47,6 +47,9 @@ type Cluster interface {
 	// Create a volume
 	CreateVolume(request *types.VolumeCreateRequest) (*Volume, error)
 
+	// Return plugin info
+	Plugins() types.PluginsInfo
+
 	// Return all volumes
 	Volumes() Volumes
 

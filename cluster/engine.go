@@ -112,6 +112,7 @@ type Engine struct {
 	Memory  int64
 	Labels  map[string]string
 	Version string
+	Plugins types.PluginsInfo
 
 	stopCh          chan struct{}
 	refreshDelayer  *delayer
@@ -500,6 +501,7 @@ func (e *Engine) updateSpecs() error {
 		"kernelversion":   info.KernelVersion,
 		"operatingsystem": info.OperatingSystem,
 	}
+	e.Plugins = info.Plugins
 	for _, label := range info.Labels {
 		kv := strings.SplitN(label, "=", 2)
 		if len(kv) != 2 {

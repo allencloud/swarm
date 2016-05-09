@@ -51,6 +51,7 @@ func getInfo(c *context, w http.ResponseWriter, r *http.Request) {
 		Architecture:      runtime.GOARCH,
 		NCPU:              int(c.cluster.TotalCpus()),
 		MemTotal:          c.cluster.TotalMemory(),
+		Plugins:           c.cluster.Plugins(),
 		HTTPProxy:         os.Getenv("http_proxy"),
 		HTTPSProxy:        os.Getenv("https_proxy"),
 		NoProxy:           os.Getenv("no_proxy"),
